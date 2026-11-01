@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,8 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author 芋道源码
  */
 @SpringBootTest(classes = CompatApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+// 每个测试类独立 Web 上下文：类结束后关闭，避免多个缓存上下文与 UReport 静态状态互相干扰
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class UReportFontRestorationTest {
 
     private static final String FILE = "zh-font.ureport.xml";
@@ -68,7 +71,7 @@ class UReportFontRestorationTest {
         memoryReportProvider.saveReport(FILE, TEMPLATE);
         int port = environment.getRequiredProperty("local.server.port", Integer.class);
         HttpTestClient.Response resp = HttpTestClient.get(port, "/ureport/pdf?_u=" + MemoryReportProvider.PREFIX + FILE);
-        assertEquals(200, resp.status);
+        assertEquals(200, resp.status, resp.describe());
         assertEquals("%PDF", new String(resp.body, 0, 4, "ISO-8859-1"));
         PdfReader reader = new PdfReader(resp.body);
         try {

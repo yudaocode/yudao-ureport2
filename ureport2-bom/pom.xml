@@ -4,15 +4,15 @@
     <modelVersion>4.0.0</modelVersion>
     <!-- BOM 不继承 parent，避免把 parent 的第三方版本管理带给宿主 -->
     <groupId>cn.iocoder.ureport2</groupId>
-    <artifactId>yudao-ureport2-boot3-bom</artifactId>
+    <artifactId>ureport2-bom</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
-    <name>yudao-ureport2 boot3 bom</name>
+    <name>ureport2-bom</name>
     <description>BOM for yudao-ureport2 boot3 line (Spring Boot 3.x / Java 17 / jakarta.servlet 6.0)</description>
-    <url>https://github.com/YunaiV/yudao-ureport2</url>
+    <url>https://gitee.com/yudaocode/yudao-ureport2</url>
 
     <properties>
-        <revision>1.0.0-SNAPSHOT</revision>
+        <revision>3.0.0-SNAPSHOT</revision>
         <flatten-maven-plugin.version>1.7.3</flatten-maven-plugin.version>
         <maven-enforcer-plugin.version>3.4.1</maven-enforcer-plugin.version>
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
@@ -43,33 +43,32 @@
             <url>https://github.com/YunaiV</url>
         </developer>
     </developers>
-    <!-- 计划仓库地址：2026-11-01 核对时远端尚不存在（HTTP 404）。正式发布前必须创建并公开该仓库，再核对这里的地址 -->
     <scm child.scm.connection.inherit.append.path="false" child.scm.developerConnection.inherit.append.path="false" child.scm.url.inherit.append.path="false">
-        <connection>scm:git:https://github.com/YunaiV/yudao-ureport2.git</connection>
-        <developerConnection>scm:git:git@github.com:YunaiV/yudao-ureport2.git</developerConnection>
-        <url>https://github.com/YunaiV/yudao-ureport2</url>
+        <connection>scm:git:https://gitee.com/yudaocode/yudao-ureport2.git</connection>
+        <developerConnection>scm:git:git@gitee.com:yudaocode/yudao-ureport2.git</developerConnection>
+        <url>https://gitee.com/yudaocode/yudao-ureport2</url>
     </scm>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>cn.iocoder.ureport2</groupId>
-                <artifactId>yudao-ureport2-boot3-core</artifactId>
+                <artifactId>ureport2-core</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>cn.iocoder.ureport2</groupId>
-                <artifactId>yudao-ureport2-boot3-font</artifactId>
+                <artifactId>ureport2-font</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>cn.iocoder.ureport2</groupId>
-                <artifactId>yudao-ureport2-boot3-console</artifactId>
+                <artifactId>ureport2-console</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>cn.iocoder.ureport2</groupId>
-                <artifactId>yudao-ureport2-boot3-spring-boot-starter</artifactId>
+                <artifactId>ureport2-spring-boot-starter</artifactId>
                 <version>${revision}</version>
             </dependency>
         </dependencies>

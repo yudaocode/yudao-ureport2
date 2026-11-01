@@ -13,7 +13,7 @@
 		<cell-style font-size="10" font-family="宋体" align="center" valign="middle"></cell-style>
 	</cell>
 	<cell expand="Down" name="C2" row="2" col="3">
-		<dataset-value dataset-name="employee" aggregate="select" property="salary"></dataset-value>
+		<dataset-value dataset-name="employee" aggregate="select" property="salary" order="none"></dataset-value>
 		<cell-style font-size="10" font-family="宋体" align="center" valign="middle"></cell-style>
 	</cell>
 	<cell expand="None" name="A3" row="3" col="1" col-span="2" left-cell="root" top-cell="root">
@@ -25,7 +25,7 @@
 		<cell-style font-size="10" font-family="宋体" align="center" valign="middle"></cell-style>
 	</cell>
 	<cell expand="Down" name="A4" row="4" col="1" left-cell="root" top-cell="root">
-		<dataset-value dataset-name="depts" aggregate="select" property="name"></dataset-value>
+		<dataset-value dataset-name="depts" aggregate="select" property="name" order="none"></dataset-value>
 		<cell-style font-size="10" font-family="宋体" align="center" valign="middle"></cell-style>
 	</cell>
 	<cell expand="None" name="B4" row="4" col="2" col-span="2">
