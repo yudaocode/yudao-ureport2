@@ -4,18 +4,18 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>cn.iocoder.ureport2</groupId>
-        <artifactId>yudao-ureport2-boot4-parent</artifactId>
+        <artifactId>ureport2-parent</artifactId>
         <version>${revision}</version>
         <relativePath>../ureport2-parent/pom.xml</relativePath>
     </parent>
-    <artifactId>yudao-ureport2-boot4-font</artifactId>
-    <name>yudao-ureport2 boot4 font</name>
+    <artifactId>ureport2-font</artifactId>
+    <name>ureport2-font</name>
     <description>UReport2 PDF fonts and FontRegister beans, unchanged from UReport2 2.2.9 ureport2-font</description>
 
     <dependencies>
         <dependency>
             <groupId>cn.iocoder.ureport2</groupId>
-            <artifactId>yudao-ureport2-boot4-core</artifactId>
+            <artifactId>ureport2-core</artifactId>
         </dependency>
     </dependencies>
 

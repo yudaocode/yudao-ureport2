@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
@@ -27,6 +28,8 @@ import static org.junit.jupiter.api.Assertions.*;
                 "ureport.import-max-file-size=20KB",
                 "ureport.import-max-request-size=30KB"
         })
+// 每个测试类独立 Web 上下文：类结束后关闭，避免多个缓存上下文与 UReport 静态状态互相干扰
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class UReportPropertiesAndImportTest {
 
     @Autowired
@@ -56,7 +59,7 @@ class UReportPropertiesAndImportTest {
             xlsx = out.toByteArray();
         }
         HttpTestClient.Response resp = HttpTestClient.postMultipart(port(), "/ureport/import", "_excel_file", "ok.xlsx", xlsx);
-        assertEquals(200, resp.status);
+        assertEquals(200, resp.status, resp.describe());
         assertTrue(resp.text().replace(" ", "").contains("\"result\":true"), resp.text());
     }
 
@@ -64,7 +67,7 @@ class UReportPropertiesAndImportTest {
     void importRejectsNonExcelFile() throws Exception {
         HttpTestClient.Response resp = HttpTestClient.postMultipart(port(), "/ureport/import", "_excel_file", "evil.txt",
                 "not excel".getBytes(StandardCharsets.UTF_8));
-        assertEquals(200, resp.status);
+        assertEquals(200, resp.status, resp.describe());
         String text = resp.text().replace(" ", "");
         assertTrue(text.contains("\"result\":false"), resp.text());
         assertTrue(text.contains("errorInfo"), resp.text());

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.nio.charset.StandardCharsets;
 
@@ -15,6 +16,8 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author 芋道源码
  */
 @SpringBootTest(classes = CompatApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+// 每个测试类独立 Web 上下文：类结束后关闭，避免多个缓存上下文与 UReport 静态状态互相干扰
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class UReportResourceBoundaryTest {
 
     private static final String MARKER = "UREPORT_BOUNDARY_MARKER_NOT_AN_ASSET";
@@ -36,7 +39,7 @@ class UReportResourceBoundaryTest {
     @Test
     void designerAssetStillServed() throws Exception {
         HttpTestClient.Response resp = HttpTestClient.get(port(), "/ureport/res/ureport-asserts/js/designer.bundle.js");
-        assertEquals(200, resp.status);
+        assertEquals(200, resp.status, resp.describe());
         assertTrue(resp.body.length > 10000);
     }
 

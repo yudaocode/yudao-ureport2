@@ -77,10 +77,28 @@ public abstract class BaseServletAction implements ServletAction {
 			if(name==null || value==null || name.startsWith("_")){
 				continue;
 			}
+			// yudao-ureport2: token 是宿主凭据，不进入报表参数（表达式 param()、SQL、Bean 数据集、链接表达式都拿不到）
+			if(TOKEN_PARAMETER.equals(name)){
+				continue;
+			}
+			// yudao-ureport2: tenantId 仍是普通报表参数；容器已解码一次，不再二次 URLDecoder，避免 + 等字符被破坏
+			if(TENANT_ID_PARAMETER.equals(name)){
+				parameters.put(name, value);
+				continue;
+			}
 			parameters.put(name, decode(value));
 		}
 		return parameters;
 	}
+
+	/**
+	 * yudao-ureport2: 宿主透明传递的凭据参数名，由 ureport-token.js 附加到 UReport 自身的同源请求
+	 */
+	public static final String TOKEN_PARAMETER="token";
+	/**
+	 * yudao-ureport2: 宿主透明传递的租户参数名，可选，值不透明
+	 */
+	public static final String TENANT_ID_PARAMETER="tenantId";
 	
 	protected void invokeMethod(String methodName,HttpServletRequest req,HttpServletResponse resp) throws ServletException{
 		try{
