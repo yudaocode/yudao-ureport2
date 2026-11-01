@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  yudao-ureport2 发布用的 ~/.m2/settings.xml 片段示例。
+  只包含环境变量占位，不要把真实 token 写进这个文件或仓库。
+
+  使用方式：把 <server> 合并进自己的 ~/.m2/settings.xml（权限建议 600），
+  然后在执行发布命令的 shell 中导出：
+    export CENTRAL_TOKEN_USERNAME=...   # Central Portal 生成的 user token 用户名部分
+    export CENTRAL_TOKEN_PASSWORD=...   # Central Portal 生成的 user token 密码部分
+    export MAVEN_GPG_PASSPHRASE=...     # GPG 私钥口令（maven-gpg-plugin 3.x 从该环境变量读取）
+
+  server id 必须是 central，与 POM 中 central-publishing-maven-plugin 的
+  <publishingServerId>central</publishingServerId> 一致。
+-->
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <servers>
+        <server>
+            <id>central</id>
+            <username>${env.CENTRAL_TOKEN_USERNAME}</username>
+            <password>${env.CENTRAL_TOKEN_PASSWORD}</password>
+        </server>
+    </servers>
+</settings>

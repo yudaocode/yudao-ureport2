@@ -24,10 +24,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
+import org.apache.xmlbeans.XmlCursor;
+
 import javax.imageio.ImageIO;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.BreakType;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
@@ -39,9 +43,6 @@ import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTColumns;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageSz;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTShd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcBorders;
@@ -49,7 +50,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTVerticalJc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc;
 
 import com.bstek.ureport.build.paging.Page;
@@ -77,40 +77,46 @@ import com.bstek.ureport.utils.UnitUtils;
  */
 public class WordProducer implements Producer{
 	public static final String BEAN_ID="ureport.wordExporter";
+	private static final String W_NS="http://schemas.openxmlformats.org/wordprocessingml/2006/main";
+	private static QName wQName(String localPart){
+		return new QName(W_NS, localPart, "w");
+	}
 	
 	@Override
 	public void produce(Report report,OutputStream outputStream) {
 		XWPFDocument document = new XWPFDocument();
 		try{
 			CTSectPr sectpr = document.getDocument().getBody().addNewSectPr();
-			if(!sectpr.isSetPgSz()) {
-				sectpr.addNewPgSz();
-			}
-			CTPageSz pageSize = sectpr.getPgSz();
 			Paper paper=report.getPaper();
-			Orientation orientation=paper.getOrientation();
-			if(orientation.equals(Orientation.landscape)){
-				pageSize.setOrient(STPageOrientation.LANDSCAPE);
-				pageSize.setH(BigInteger.valueOf(DxaUtils.points2dxa(paper.getWidth())));
-				pageSize.setW(BigInteger.valueOf(DxaUtils.points2dxa(paper.getHeight())));
-			}else{
-				pageSize.setOrient(STPageOrientation.PORTRAIT);
-				pageSize.setW(BigInteger.valueOf(DxaUtils.points2dxa(paper.getWidth())));
-				pageSize.setH(BigInteger.valueOf(DxaUtils.points2dxa(paper.getHeight())));
+			// yudao-ureport2: POI 4.x 的 poi-ooxml-schemas（精简版）不含 CTPageSz/CTPageMar/CTColumns/STPageOrientation，
+			// 为避免引入与之同包重叠的完整 ooxml-schemas，这里用 XmlCursor 按 OOXML 元素顺序 pgSz -> pgMar -> cols 直接写入
+			XmlCursor cursor=sectpr.newCursor();
+			try{
+				cursor.toEndToken();
+				boolean landscape=paper.getOrientation().equals(Orientation.landscape);
+				long w=DxaUtils.points2dxa(landscape?paper.getHeight():paper.getWidth());
+				long h=DxaUtils.points2dxa(landscape?paper.getWidth():paper.getHeight());
+				cursor.beginElement(wQName("pgSz"));
+				cursor.insertAttributeWithValue(wQName("w"), String.valueOf(w));
+				cursor.insertAttributeWithValue(wQName("h"), String.valueOf(h));
+				cursor.insertAttributeWithValue(wQName("orient"), landscape?"landscape":"portrait");
+				cursor.toNextToken();
+				cursor.beginElement(wQName("pgMar"));
+				cursor.insertAttributeWithValue(wQName("top"), String.valueOf(DxaUtils.points2dxa(paper.getTopMargin())));
+				cursor.insertAttributeWithValue(wQName("right"), String.valueOf(DxaUtils.points2dxa(paper.getRightMargin())));
+				cursor.insertAttributeWithValue(wQName("bottom"), String.valueOf(DxaUtils.points2dxa(paper.getBottomMargin())));
+				cursor.insertAttributeWithValue(wQName("left"), String.valueOf(DxaUtils.points2dxa(paper.getLeftMargin())));
+				cursor.toNextToken();
+				int columnCount=paper.getColumnCount();
+				if(paper.isColumnEnabled() && columnCount>0){
+					cursor.beginElement(wQName("cols"));
+					cursor.insertAttributeWithValue(wQName("num"), String.valueOf(columnCount));
+					cursor.insertAttributeWithValue(wQName("space"), String.valueOf(DxaUtils.points2dxa(paper.getColumnMargin())));
+					cursor.toNextToken();
+				}
+			}finally{
+				cursor.dispose();
 			}
-			int columnCount=paper.getColumnCount();
-			if(paper.isColumnEnabled() && columnCount>0){
-				CTColumns cols=CTColumns.Factory.newInstance();
-				cols.setNum(new BigInteger(String.valueOf(columnCount)));
-				int columnMargin=paper.getColumnMargin();
-				cols.setSpace(new BigInteger(String.valueOf(DxaUtils.points2dxa(columnMargin))));
-				sectpr.setCols(cols);
-			}
-			CTPageMar pageMar = sectpr.addNewPgMar();
-			pageMar.setLeft(BigInteger.valueOf(DxaUtils.points2dxa(paper.getLeftMargin())));
-			pageMar.setRight(BigInteger.valueOf(DxaUtils.points2dxa(paper.getRightMargin())));
-			pageMar.setTop(BigInteger.valueOf(DxaUtils.points2dxa(paper.getTopMargin())));
-			pageMar.setBottom(BigInteger.valueOf(DxaUtils.points2dxa(paper.getBottomMargin())));
 			List<Column> columns=report.getColumns();
 			int intArr[]=buildColumnSizeAndTotalWidth(columns);
 			int totalColumn=intArr[0],tableWidth=intArr[1];

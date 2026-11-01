@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project child.project.url.inherit.append.path="false" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <!-- BOM 不继承 parent，避免把 parent 的第三方版本管理带给宿主 -->
+    <groupId>cn.iocoder.ureport2</groupId>
+    <artifactId>yudao-ureport2-boot3-bom</artifactId>
+    <version>${revision}</version>
+    <packaging>pom</packaging>
+    <name>yudao-ureport2 boot3 bom</name>
+    <description>BOM for yudao-ureport2 boot3 line (Spring Boot 3.x / Java 17 / jakarta.servlet 6.0)</description>
+    <url>https://github.com/YunaiV/yudao-ureport2</url>
+
+    <properties>
+        <revision>1.0.0-SNAPSHOT</revision>
+        <flatten-maven-plugin.version>1.7.3</flatten-maven-plugin.version>
+        <maven-enforcer-plugin.version>3.4.1</maven-enforcer-plugin.version>
+        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
+        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
+        <central-publishing-maven-plugin.version>0.12.0</central-publishing-maven-plugin.version>
+        <central.skipUpload>true</central.skipUpload>
+        <central.skipPublishing>false</central.skipPublishing>
+        <yudao.release.approved>false</yudao.release.approved>
+    </properties>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Gaojie</name>
+            <email>jacky.gao@bstek.com</email>
+            <organization>Bstek</organization>
+            <organizationUrl>http://www.bstek.com</organizationUrl>
+        </developer>
+        <developer>
+            <name>芋道源码</name>
+            <url>https://github.com/YunaiV</url>
+        </developer>
+    </developers>
+    <!-- 计划仓库地址：2026-11-01 核对时远端尚不存在（HTTP 404）。正式发布前必须创建并公开该仓库，再核对这里的地址 -->
+    <scm child.scm.connection.inherit.append.path="false" child.scm.developerConnection.inherit.append.path="false" child.scm.url.inherit.append.path="false">
+        <connection>scm:git:https://github.com/YunaiV/yudao-ureport2.git</connection>
+        <developerConnection>scm:git:git@github.com:YunaiV/yudao-ureport2.git</developerConnection>
+        <url>https://github.com/YunaiV/yudao-ureport2</url>
+    </scm>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>cn.iocoder.ureport2</groupId>
+                <artifactId>yudao-ureport2-boot3-core</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.iocoder.ureport2</groupId>
+                <artifactId>yudao-ureport2-boot3-font</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.iocoder.ureport2</groupId>
+                <artifactId>yudao-ureport2-boot3-console</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.iocoder.ureport2</groupId>
+                <artifactId>yudao-ureport2-boot3-spring-boot-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>${flatten-maven-plugin.version}</version>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals><goal>flatten</goal></goals>
+                    </execution>
+                    <execution>
+                        <id>flatten-clean</id>
+                        <phase>clean</phase>
+                        <goals><goal>clean</goal></goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    <profiles>
+        <!-- Maven Central 发布：默认关闭，只有显式 -P release 才启用。普通 install / verify 不签名、不需要凭据 -->
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven-gpg-plugin.version}</version>
+                        <configuration>
+                            <!-- 口令只从环境变量 MAVEN_GPG_PASSPHRASE 读取，不写进 POM 或命令行 -->
+                            <gpgArguments>
+                                <arg>--pinentry-mode</arg>
+                                <arg>loopback</arg>
+                            </gpgArguments>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals><goal>sign</goal></goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- 真正上传（-Dcentral.skipUpload=false）时，validate 阶段就要求显式确认 -Dyudao.release.approved=true -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <version>${maven-enforcer-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>require-release-approval</id>
+                                <!-- 绑定 validate：任何生命周期最先执行，早于 central 插件注入的 deploy 执行 -->
+                                <phase>validate</phase>
+                                <goals><goal>enforce</goal></goals>
+                                <configuration>
+                                    <!-- 默认 central.skipUpload=true 时只生成本地 bundle，不需要确认；关闭 skipUpload（真正上传）时必须同时确认 -->
+                                    <skip>${central.skipUpload}</skip>
+                                    <rules>
+                                        <requireProperty>
+                                            <property>yudao.release.approved</property>
+                                            <regex>true</regex>
+                                            <regexMessage>上传到 Maven Central 需要用户确认，并且 SCM 远端仓库已公开。确认后才能加 -Dyudao.release.approved=true</regexMessage>
+                                        </requireProperty>
+                                    </rules>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>${central-publishing-maven-plugin.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <!-- 对应 ~/.m2/settings.xml 中 <server><id>central</id> -->
+                            <publishingServerId>central</publishingServerId>
+                            <!-- 上传后停在 Portal 等待人工核对，不自动发布 -->
+                            <autoPublish>false</autoPublish>
+                            <waitUntil>validated</waitUntil>
+                            <skipUpload>${central.skipUpload}</skipUpload>
+                            <skipPublishing>${central.skipPublishing}</skipPublishing>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

@@ -9,7 +9,8 @@
 		<property name="ignoreUnresolvablePlaceholders" value="true"></property>
 	</bean>
 	
-	<bean id="ureport.propertyPlaceholderConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	<!-- yudao-ureport2: 使用 PropertySourcesPlaceholderConfigurer，优先读取 Spring Environment（含 Spring Boot 配置），ureport.properties 仅作默认值 -->
+	<bean id="ureport.propertyPlaceholderConfigurer" class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
 		<property name="location" value="classpath:ureport.properties"></property>
 		<property name="ignoreUnresolvablePlaceholders" value="true"></property>
 	</bean>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>cn.iocoder.ureport2</groupId>
+        <artifactId>yudao-ureport2-boot3-parent</artifactId>
+        <version>${revision}</version>
+        <relativePath>../ureport2-parent/pom.xml</relativePath>
+    </parent>
+    <artifactId>yudao-ureport2-boot3-spring-boot-starter</artifactId>
+    <name>yudao-ureport2 boot3 spring boot starter</name>
+    <description>Spring Boot 3.x starter for yudao-ureport2 boot3 line: registers /ureport/* and binds ureport.* properties</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>cn.iocoder.ureport2</groupId>
+            <artifactId>yudao-ureport2-boot3-console</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>
