@@ -13,13 +13,13 @@ Java 包名仍是 `com.bstek.ureport.*`，以便兼容原模板和扩展实现�
 
 两个仓库内容相同。源码按 Spring Boot 大版本分成三个分支：
 
-| 分支 | 适用宿主 | 维护版本 | Gitee | GitHub |
-| --- | --- | --- | --- | --- |
-| `master` | JDK 8 + Spring Boot 2.7 | `2.0.0-SNAPSHOT` | [`master`](https://gitee.com/yudaocode/yudao-ureport2/tree/master/) | [`master`](https://github.com/yudaocode/yudao-ureport2/tree/master) |
-| `master-jdk17` | JDK 17 + Spring Boot 3.5 | `3.0.0-SNAPSHOT` | [`master-jdk17`](https://gitee.com/yudaocode/yudao-ureport2/tree/master-jdk17/) | [`master-jdk17`](https://github.com/yudaocode/yudao-ureport2/tree/master-jdk17) |
-| `master-jdk25` | JDK 25 + Spring Boot 4.1 | `4.0.0-SNAPSHOT` | [`master-jdk25`](https://gitee.com/yudaocode/yudao-ureport2/tree/master-jdk25/) | [`master-jdk25`](https://github.com/yudaocode/yudao-ureport2/tree/master-jdk25) |
+| 分支 | 适用宿主 | Maven Central 正式版本 | 源码开发版本 | Gitee | GitHub |
+| --- | --- | --- | --- | --- | --- |
+| `master` | JDK 8 + Spring Boot 2.7 | [`2.0.0`](https://central.sonatype.com/artifact/cn.iocoder.ureport2/ureport2-spring-boot-starter/2.0.0) | `2.0.0-SNAPSHOT` | [`master`](https://gitee.com/yudaocode/yudao-ureport2/tree/master/) | [`master`](https://github.com/yudaocode/yudao-ureport2/tree/master) |
+| `master-jdk17` | JDK 17 + Spring Boot 3.5 | [`3.0.0`](https://central.sonatype.com/artifact/cn.iocoder.ureport2/ureport2-spring-boot-starter/3.0.0) | `3.0.0-SNAPSHOT` | [`master-jdk17`](https://gitee.com/yudaocode/yudao-ureport2/tree/master-jdk17/) | [`master-jdk17`](https://github.com/yudaocode/yudao-ureport2/tree/master-jdk17) |
+| `master-jdk25` | JDK 25 + Spring Boot 4.1 | [`4.0.0`](https://central.sonatype.com/artifact/cn.iocoder.ureport2/ureport2-spring-boot-starter/4.0.0) | `4.0.0-SNAPSHOT` | [`master-jdk25`](https://gitee.com/yudaocode/yudao-ureport2/tree/master-jdk25/) | [`master-jdk25`](https://github.com/yudaocode/yudao-ureport2/tree/master-jdk25) |
 
-各分支已验证的精确版本见下面的“版本线”。
+宿主直接引用 Maven Central 上的正式版本。源码开发版本是各分支 POM 中的默认版本，只在从源码构建时使用。各分支已验证的精确版本见下面的“版本线”。
 
 ## 关于 UReport2
 
@@ -35,17 +35,17 @@ UReport2 是一款架构在 Spring 之上的高性能纯 Java 报表引擎，通
 
 ## 版本线
 
-源码按 Spring Boot 大版本分成三个分支。三条线的 groupId 都是 `cn.iocoder.ureport2`，artifactId 也相同，用版本号区分：维护版本的主号与宿主的 Spring Boot 大版本一致（`2.x` 对应 Boot 2，`3.x` 对应 Boot 3，`4.x` 对应 Boot 4）。宿主只引入与自己 Boot 版本对应的一条线，不要同时引入多条线。
+源码按 Spring Boot 大版本分成三个分支。三条线的 groupId 都是 `cn.iocoder.ureport2`，artifactId 也相同，用版本号区分：版本主号与宿主的 Spring Boot 大版本一致（`2.x` 对应 Boot 2，`3.x` 对应 Boot 3，`4.x` 对应 Boot 4）。宿主只引入与自己 Boot 版本对应的一条线，不要同时引入多条线。
 
-| 分支 | 维护版本 | 已验证的宿主版本 | Spring | JDK | Servlet | 主要依赖 | Starter artifactId |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| `master` | `2.0.0-SNAPSHOT` | Spring Boot 2.7.18 | 5.3.31 | JDK 8 | javax.servlet 4.0.1 | POI 4.1.2、Velocity 2.3 | `ureport2-spring-boot-starter` |
-| `master-jdk17` | `3.0.0-SNAPSHOT` | Spring Boot 3.5.15 | 6.2.19 | JDK 17 | jakarta.servlet 6.0.0 | POI 5.5.1、Velocity 2.4.1 | `ureport2-spring-boot-starter` |
-| `master-jdk25` | `4.0.0-SNAPSHOT` | Spring Boot 4.1.2 | 7.0.10 | JDK 25（库字节码为 Java 17） | jakarta.servlet 6.1.0 | POI 5.5.1、Velocity 2.4.1 | `ureport2-spring-boot-starter` |
+| 分支 | 正式版本 | 源码开发版本 | 已验证的宿主版本 | Spring | JDK | Servlet | 主要依赖 | Starter artifactId |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `master` | `2.0.0` | `2.0.0-SNAPSHOT` | Spring Boot 2.7.18 | 5.3.31 | JDK 8 | javax.servlet 4.0.1 | POI 4.1.2、Velocity 2.3 | `ureport2-spring-boot-starter` |
+| `master-jdk17` | `3.0.0` | `3.0.0-SNAPSHOT` | Spring Boot 3.5.15 | 6.2.19 | JDK 17 | jakarta.servlet 6.0.0 | POI 5.5.1、Velocity 2.4.1 | `ureport2-spring-boot-starter` |
+| `master-jdk25` | `4.0.0` | `4.0.0-SNAPSHOT` | Spring Boot 4.1.2 | 7.0.10 | JDK 25（库字节码为 Java 17） | jakarta.servlet 6.1.0 | POI 5.5.1、Velocity 2.4.1 | `ureport2-spring-boot-starter` |
 
 表中是实际验证过的精确版本，同一大版本的其他小版本没有逐一验证，不承诺全部可用。
 
-每条线的产物都是 `ureport2-parent`、`ureport2-bom`、`ureport2-core`、`ureport2-font`、`ureport2-console`、`ureport2-spring-boot-starter`，只有版本不同。同一个宿主中，所有 `cn.iocoder.ureport2` 模块必须使用同一个维护版本。
+每条线的产物都是 `ureport2-parent`、`ureport2-bom`、`ureport2-core`、`ureport2-font`、`ureport2-console`、`ureport2-spring-boot-starter`，只有版本不同。同一个宿主中，所有 `cn.iocoder.ureport2` 模块必须使用同一个版本。
 
 **当前分支：`master-jdk17`**（Spring Boot 3.5.15，JDK 17，jakarta.servlet 6.0.0）。
 
@@ -66,24 +66,14 @@ UReport2 是一款架构在 Spring 之上的高性能纯 Java 报表引擎，通
 
 ## 快速开始
 
-### 1. 构建并安装到本地仓库
+### 1. 引入 Starter
 
-当前分支的版本 `3.0.0-SNAPSHOT` **还没有发布到 Maven Central**，需要先从源码构建并安装到本地 Maven 仓库。在发布之前，下面的坐标只能在执行过 `mvn install` 的机器上解析。
-
-```bash
-git clone https://gitee.com/yudaocode/yudao-ureport2.git
-cd yudao-ureport2
-git checkout master-jdk17
-# 使用 JDK 17
-mvn clean install
-```
-
-### 2. 引入 Starter
+当前分支对应的正式版本 `3.0.0` 已发布到 Maven Central（[ureport2-spring-boot-starter](https://central.sonatype.com/artifact/cn.iocoder.ureport2/ureport2-spring-boot-starter/3.0.0)、[ureport2-bom](https://central.sonatype.com/artifact/cn.iocoder.ureport2/ureport2-bom/3.0.0)），宿主直接引入即可，不需要先从源码构建。
 
 ```xml
 <properties>
     <!-- 主号与宿主的 Spring Boot 大版本一致 -->
-    <ureport2.version>3.0.0-SNAPSHOT</ureport2.version>
+    <ureport2.version>3.0.0</ureport2.version>
 </properties>
 
 <dependency>
@@ -111,7 +101,7 @@ mvn clean install
 
 不要同时引入官方的 `com.bstek.ureport:*`，也不要让 `cn.iocoder.ureport2` 的各模块混用不同主号的版本（例如 starter 用 `2.x`、core 用 `3.x`）。Starter 启动时会检查 classpath，发现重复引擎或混用版本线时直接启动失败。
 
-### 3. 配置（可选）
+### 2. 配置（可选）
 
 所有配置都有默认值，不配置也能启动：
 
@@ -140,7 +130,7 @@ ureport:
 
 使用 Starter 时以 Spring Boot 中的 `ureport.*` 配置为准，未配置时生效的是上表中的 Starter 默认值，它们也高于原来 classpath 下 `ureport.properties` 中的值。从旧项目迁移时，需要把原 `ureport.properties` 中的配置改写到 `application.yml`。宿主直接配置的原驼峰键（例如 `ureport.disableFileProvider`）仍然优先。
 
-### 4. 访问
+### 3. 访问
 
 Servlet 注册在 `/ureport/*`，宿主配置了 `server.servlet.context-path` 时需要加上该前缀。
 
@@ -153,6 +143,21 @@ Servlet 注册在 `/ureport/*`，宿主配置了 `server.servlet.context-path` �
 | `/ureport/word?_u=<报表文件>` | 导出 Word |
 
 `<报表文件>` 是带存储前缀的文件名，前缀由对应的 `ReportProvider` 决定，例如 `file:demo.ureport.xml`。
+
+### 从源码构建（可选）
+
+只有需要修改或调试源码时才需要这一步。源码分支 POM 中的默认版本是开发版本 `3.0.0-SNAPSHOT`，与 Maven Central 上的正式版本 `3.0.0` 不同。
+
+```bash
+git clone https://gitee.com/yudaocode/yudao-ureport2.git
+cd yudao-ureport2
+git checkout master-jdk17
+# 使用 JDK 17
+mvn clean install                       # 安装 3.0.0-SNAPSHOT 到本地 Maven 仓库
+# mvn clean install -Drevision=3.0.0    # 按正式版本号在本地构建，只安装到本地仓库，不发布
+```
+
+默认安装的是 `3.0.0-SNAPSHOT`，宿主要引用它时把上面的 `ureport2.version` 改为 `3.0.0-SNAPSHOT`。用 `-Drevision=3.0.0` 构建只用于本地验证，安装后会覆盖本地仓库中从 Central 下载的同版本文件。
 
 ## 安全与部署
 
