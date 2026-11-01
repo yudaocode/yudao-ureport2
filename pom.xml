@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <!-- 仅用于聚合构建，不安装、不发布 -->
+    <groupId>cn.iocoder.ureport2</groupId>
+    <artifactId>yudao-ureport2-boot4-build</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>yudao-ureport2 boot4 build</name>
+
+    <modules>
+        <module>ureport2-parent</module>
+        <module>ureport2-bom</module>
+        <module>ureport2-core</module>
+        <module>ureport2-font</module>
+        <module>ureport2-console</module>
+        <module>ureport2-spring-boot-starter</module>
+        <module>ureport2-compat-tests</module>
+    </modules>
+
+    <properties>
+        <maven.install.skip>true</maven.install.skip>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+</project>

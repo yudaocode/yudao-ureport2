@@ -1,0 +1,23 @@
+yudao-ureport2
+Copyright 2026 芋道源码
+
+This product is a community-maintained derivative of UReport2 2.2.9
+(https://github.com/youseries/ureport), Copyright 2017 Bstek,
+licensed under the Apache License, Version 2.0 (see LICENSE.txt).
+
+This is NOT an official UReport2 release. Java packages com.bstek.ureport.*
+are kept for template and extension compatibility.
+
+The ureport2-font module keeps the font files, FontRegister classes and
+ureport-font-context.xml of the upstream UReport2 2.2.9 ureport2-font module
+(Arial, SimSun, SimHei, KaiTi, FangSong, Microsoft YaHei, Times New Roman,
+Courier New, Comic Sans MS, Impact). These files are byte-identical to
+upstream tag 2.2.9, with their original embedded font metadata retained;
+only the Maven coordinates and packaging were changed. The font files belong
+to their respective rights holders, and this NOTICE does not change their
+original terms.
+
+Third-party dependencies keep their own licenses. In particular,
+com.itextpdf:itextpdf 5.x is distributed under the AGPL / commercial license;
+its suitability must be verified by each user. Not all dependencies are
+Apache-2.0 licensed.

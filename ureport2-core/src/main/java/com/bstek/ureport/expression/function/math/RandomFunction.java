@@ -18,7 +18,7 @@ package com.bstek.ureport.expression.function.math;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.apache.commons.lang.math.RandomUtils;
+import org.apache.commons.lang3.RandomUtils;
 
 import com.bstek.ureport.build.Context;
 import com.bstek.ureport.expression.model.data.ExpressionData;
@@ -39,7 +39,7 @@ public class RandomFunction extends MathFunction {
 		if(feed==0){
 			return Math.random();
 		}
-		return RandomUtils.nextInt(feed);
+		return RandomUtils.nextInt(0,feed);
 	}
 
 	@Override
