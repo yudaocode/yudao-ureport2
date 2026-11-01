@@ -1,16 +1,31 @@
 # 发布到 Maven Central（维护者指南）
 
-本文面向维护者，说明 yudao-ureport2 如何签名、打包并发布到 Maven Central。三条线（boot2 / boot3 / boot4）的发布方式相同，本文件在三个分支中内容一致。
+本文面向维护者，说明 yudao-ureport2 如何签名、打包并发布到 Maven Central。三条线（`master` / `master-jdk17` / `master-jdk25` 分支）的发布方式相同，本文件在三个分支中内容一致。
+
+源码仓库：Gitee <https://gitee.com/yudaocode/yudao-ureport2>（主仓库，POM 的 `url` / `scm` 指向这里），GitHub <https://github.com/yudaocode/yudao-ureport2>。
 
 ## 1 产物、版本与 JDK
 
-| 线 | 宿主 | 构建 JDK | Starter |
-| --- | --- | --- | --- |
-| boot2 | Spring Boot 2.7.18 | 8 | `cn.iocoder.ureport2:yudao-ureport2-boot2-spring-boot-starter` |
-| boot3 | Spring Boot 3.5.15 | 17 | `cn.iocoder.ureport2:yudao-ureport2-boot3-spring-boot-starter` |
-| boot4 | Spring Boot 4.1.2 | 25（库字节码为 17） | `cn.iocoder.ureport2:yudao-ureport2-boot4-spring-boot-starter` |
+| 分支 | 宿主 | 构建 JDK | 库版本主号 | 默认 `revision` |
+| --- | --- | --- | --- | --- |
+| `master` | Spring Boot 2.7.18 | 8 | `2.x` | `2.0.0-SNAPSHOT` |
+| `master-jdk17` | Spring Boot 3.5.15 | 17 | `3.x` | `3.0.0-SNAPSHOT` |
+| `master-jdk25` | Spring Boot 4.1.2 | 25（库字节码为 17） | `4.x` | `4.0.0-SNAPSHOT` |
 
-每条线发布 6 个产物：`-parent`（pom）、`-bom`（pom）、`-core`、`-font`、`-console`、`-spring-boot-starter`，三条线共 18 个。根聚合 POM（`-build`）和 `-compat-tests` 不发布（`maven.install.skip`、`maven.deploy.skip`、`central.skipPublishing`）。
+三条线的 groupId 都是 `cn.iocoder.ureport2`，artifactId 相同，与模块目录名一致。每条线发布 6 个产物：
+
+| artifactId | 打包 |
+| --- | --- |
+| `ureport2-parent` | pom |
+| `ureport2-bom` | pom |
+| `ureport2-core` | jar |
+| `ureport2-font` | jar |
+| `ureport2-console` | jar |
+| `ureport2-spring-boot-starter` | jar |
+
+根聚合 POM（`ureport2-build`）和 `ureport2-compat-tests` 不发布（`maven.install.skip`、`maven.deploy.skip`、`central.skipPublishing`）。
+
+**同名 artifact、不同版本**：三条线靠版本主号区分，库版本主号等于对应的 Spring Boot 大版本。例如 `ureport2-spring-boot-starter:2.0.0` 对应 Boot 2，`3.0.0` 对应 Boot 3，`4.0.0` 对应 Boot 4。各线只在自己的主号内递增版本（`master-jdk17` 分支发 `3.0.1`、`3.1.0`，不会发 `2.x` 或 `4.x`），所以同一个坐标下三条线的版本不会冲突。三条线分别从各自分支、在各自 JDK 下构建和上传，每次发布只上传本线 6 个产物。
 
 每条线都要在本线对应的 JDK 下构建（设置 `JAVA_HOME`）。
 
@@ -37,7 +52,7 @@ SNAPSHOT 与正式版本在 `skipUpload=true` 时的行为不同：
 | 版本类型 | `skipUpload=true` 时 |
 | --- | --- |
 | `-SNAPSHOT` | 走 snapshot 流程，跳过上传，不生成 release bundle |
-| 正式版本（例如 `1.0.0`） | 在 `target/central-publishing/central-bundle.zip` 生成 bundle，不上传 |
+| 正式版本（例如 `3.0.0`） | 在 `target/central-publishing/central-bundle.zip` 生成 bundle，不上传 |
 
 所以要检查 bundle 内容，必须先改成正式版本号。
 
@@ -113,8 +128,8 @@ mvn -B -s "$UREPORT_SETTINGS" -P release -Dgpg.keyname="$GPG_KEY_ID" \
 
 ## 6 发布前检查清单
 
-- [ ] SCM 远端仓库已公开，POM 中的 `url` / `scm` 与实际地址一致。
-- [ ] 已确定正式版本号；`ureport2-parent` 与 `ureport2-bom` 的 `revision` 一致，或统一用 `-Drevision` 传入。
+- [ ] POM 中的 `url` / `scm` 与 Gitee 主仓库 <https://gitee.com/yudaocode/yudao-ureport2> 一致。
+- [ ] 已确定正式版本号，主号与本线 Boot 大版本一致；`ureport2-parent` 与 `ureport2-bom` 的 `revision` 一致，或统一用 `-Drevision` 传入。
 - [ ] 三条线分别在对应 JDK 下通过完整测试。
 - [ ] 源码已提交并打 tag。
 - [ ] 命名空间已验证，user token 可用，公钥能从 keyserver 读回。
@@ -124,38 +139,30 @@ mvn -B -s "$UREPORT_SETTINGS" -P release -Dgpg.keyname="$GPG_KEY_ID" \
 
 ## 7 宿主引入示例
 
+三条线的 artifactId 相同，按宿主 Spring Boot 大版本选择版本主号：
+
 ```xml
-<!-- Spring Boot 2.7.x / JDK 8 -->
-<dependency>
-    <groupId>cn.iocoder.ureport2</groupId>
-    <artifactId>yudao-ureport2-boot2-spring-boot-starter</artifactId>
-    <version>${yudao-ureport2.version}</version>
-</dependency>
+<properties>
+    <!-- Spring Boot 2.7.x / JDK 8 用 2.x；3.5.x / JDK 17 用 3.x；4.1.x / JDK 17+ 用 4.x -->
+    <ureport2.version>3.0.0</ureport2.version>
+</properties>
 
-<!-- Spring Boot 3.5.x / JDK 17 -->
 <dependency>
     <groupId>cn.iocoder.ureport2</groupId>
-    <artifactId>yudao-ureport2-boot3-spring-boot-starter</artifactId>
-    <version>${yudao-ureport2.version}</version>
-</dependency>
-
-<!-- Spring Boot 4.1.x / JDK 17+ -->
-<dependency>
-    <groupId>cn.iocoder.ureport2</groupId>
-    <artifactId>yudao-ureport2-boot4-spring-boot-starter</artifactId>
-    <version>${yudao-ureport2.version}</version>
+    <artifactId>ureport2-spring-boot-starter</artifactId>
+    <version>${ureport2.version}</version>
 </dependency>
 ```
 
-可选 BOM（以 boot3 为例，其他线替换 `boot3`）：
+可选 BOM（版本同样按主号选择）：
 
 ```xml
 <dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>cn.iocoder.ureport2</groupId>
-            <artifactId>yudao-ureport2-boot3-bom</artifactId>
-            <version>${yudao-ureport2.version}</version>
+            <artifactId>ureport2-bom</artifactId>
+            <version>${ureport2.version}</version>
             <type>pom</type>
             <scope>import</scope>
         </dependency>
@@ -163,4 +170,4 @@ mvn -B -s "$UREPORT_SETTINGS" -P release -Dgpg.keyname="$GPG_KEY_ID" \
 </dependencyManagement>
 ```
 
-只引入与宿主 Boot 大版本对应的一条线，不要混用，也不要同时引入 `com.bstek.ureport:*`。发布到 Central 之前，这些坐标只能在执行过 `mvn install` 的机器上解析。
+`ureport2-core`、`ureport2-font`、`ureport2-console` 必须与 starter 使用同一个版本，不要混用不同主号，也不要同时引入 `com.bstek.ureport:*`。发布到 Central 之前，这些坐标只能在执行过 `mvn install` 的机器上解析。

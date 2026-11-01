@@ -4,10 +4,10 @@
     <modelVersion>4.0.0</modelVersion>
     <!-- 仅用于聚合构建，不安装、不发布 -->
     <groupId>cn.iocoder.ureport2</groupId>
-    <artifactId>yudao-ureport2-boot2-build</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <artifactId>ureport2-build</artifactId>
+    <version>2.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>yudao-ureport2 boot2 build</name>
+    <name>ureport2-build</name>
 
     <modules>
         <module>ureport2-parent</module>

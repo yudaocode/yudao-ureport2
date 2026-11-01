@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -32,6 +33,8 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author 芋道源码
  */
 @SpringBootTest(classes = CompatApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+// 每个测试类独立 Web 上下文：类结束后关闭，避免多个缓存上下文与 UReport 静态状态互相干扰
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class UReportCompatTest {
 
     private static final String REPORT = "mem:demo.ureport.xml";
@@ -62,17 +65,17 @@ class UReportCompatTest {
     @Test
     void designerPage() throws Exception {
         HttpTestClient.Response resp = HttpTestClient.get(port(), "/ureport/designer");
-        assertEquals(200, resp.status);
+        assertEquals(200, resp.status, resp.describe());
         assertTrue(resp.text().contains("ureport"), resp.text());
         HttpTestClient.Response js = HttpTestClient.get(port(), "/ureport/res/ureport-asserts/js/designer.bundle.js");
-        assertEquals(200, js.status);
+        assertEquals(200, js.status, js.describe());
         assertTrue(js.body.length > 10000);
     }
 
     @Test
     void htmlPreview() throws Exception {
         HttpTestClient.Response resp = HttpTestClient.get(port(), "/ureport/preview?_u=" + REPORT);
-        assertEquals(200, resp.status);
+        assertEquals(200, resp.status, resp.describe());
         String html = resp.text();
         assertTrue(html.contains("CompatReportTitle"), html);
         assertTrue(html.contains("JdbcEmpAlice") && html.contains("JdbcEmpCarol"), "JDBC buildin datasource rows");
@@ -84,7 +87,7 @@ class UReportCompatTest {
     @Test
     void excelExport() throws Exception {
         HttpTestClient.Response resp = HttpTestClient.get(port(), "/ureport/excel?_u=" + REPORT);
-        assertEquals(200, resp.status);
+        assertEquals(200, resp.status, resp.describe());
         List<String> values = new ArrayList<>();
         try (XSSFWorkbook wb = new XSSFWorkbook(new ByteArrayInputStream(resp.body))) {
             Sheet sheet = wb.getSheetAt(0);
@@ -104,7 +107,7 @@ class UReportCompatTest {
     @Test
     void pdfExport() throws Exception {
         HttpTestClient.Response resp = HttpTestClient.get(port(), "/ureport/pdf?_u=" + REPORT);
-        assertEquals(200, resp.status);
+        assertEquals(200, resp.status, resp.describe());
         assertEquals("%PDF", new String(resp.body, 0, 4, "ISO-8859-1"));
         PdfReader reader = new PdfReader(resp.body);
         try {
@@ -121,7 +124,7 @@ class UReportCompatTest {
     @Test
     void wordExport() throws Exception {
         HttpTestClient.Response resp = HttpTestClient.get(port(), "/ureport/word?_u=" + REPORT);
-        assertEquals(200, resp.status);
+        assertEquals(200, resp.status, resp.describe());
         try (XWPFDocument doc = new XWPFDocument(new ByteArrayInputStream(resp.body));
              XWPFWordExtractor extractor = new XWPFWordExtractor(doc)) {
             String text = extractor.getText();

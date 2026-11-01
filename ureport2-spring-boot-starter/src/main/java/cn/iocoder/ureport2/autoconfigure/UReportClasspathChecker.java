@@ -11,7 +11,7 @@ import java.util.Properties;
 /**
  * 启动时检查 classpath，阻止以下情况：
  * 1. 同时存在官方 com.bstek.ureport 的 jar（同包名双引擎）；
- * 2. 混入其他线（boot3 / boot4）的 yudao-ureport2 core / console。
+ * 2. 混入其他 Boot 线的 cn.iocoder.ureport2 core / console（artifactId 相同，版本主号不同）。
  *
  * @author 芋道源码
  */
@@ -42,8 +42,8 @@ public final class UReportClasspathChecker {
         for (String marker : LINE_MARKERS) {
             List<URL> urls = list(classLoader, marker);
             if (urls.isEmpty()) {
-                problems.add("Missing " + marker + ", the official com.bstek.ureport jar may be used instead of yudao-ureport2-"
-                        + EXPECTED_LINE);
+                problems.add("Missing " + marker + ", the official com.bstek.ureport jar may be used instead of the "
+                        + "cn.iocoder.ureport2 " + EXPECTED_LINE + " line");
             }
             for (URL url : urls) {
                 String line = readLine(url);
@@ -53,8 +53,10 @@ public final class UReportClasspathChecker {
             }
         }
         if (!problems.isEmpty()) {
-            throw new IllegalStateException("yudao-ureport2 classpath conflict. Remove com.bstek.ureport:* and other "
-                    + "yudao-ureport2-bootN artifacts. Details: " + problems);
+            throw new IllegalStateException("yudao-ureport2 classpath conflict. Remove com.bstek.ureport:* and make sure "
+                    + "all cn.iocoder.ureport2:ureport2-* artifacts use the same version of the " + EXPECTED_LINE
+                    + " line (other Spring Boot lines share the same artifactIds with a different major version)."
+                    + " Details: " + problems);
         }
     }
 

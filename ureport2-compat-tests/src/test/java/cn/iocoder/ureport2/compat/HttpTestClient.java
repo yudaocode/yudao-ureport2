@@ -19,15 +19,33 @@ final class HttpTestClient {
         final int status;
         final String contentType;
         final byte[] body;
+        final int port;
+        final String path;
 
-        Response(int status, String contentType, byte[] body) {
+        Response(int status, String contentType, byte[] body, int port, String path) {
             this.status = status;
             this.contentType = contentType;
             this.body = body;
+            this.port = port;
+            this.path = path;
         }
 
         String text() {
             return new String(body, StandardCharsets.UTF_8);
+        }
+
+        /**
+         * 失败诊断：请求端口、去掉 query 的路径、响应类型和简短 body；不输出 query，body 中的 token 值打码
+         */
+        String describe() {
+            int q = path.indexOf('?');
+            String bare = q < 0 ? path : path.substring(0, q);
+            String snippet = text().replaceAll("(?i)(token=)[^&\"'\\s<]*", "$1***");
+            if (snippet.length() > 300) {
+                snippet = snippet.substring(0, 300) + "...";
+            }
+            return "port=" + port + " path=" + bare + " status=" + status
+                    + " contentType=" + contentType + " body=" + snippet;
         }
     }
 
@@ -37,7 +55,7 @@ final class HttpTestClient {
     static Response get(int port, String path) throws IOException {
         HttpURLConnection conn = open(port, path);
         conn.setRequestMethod("GET");
-        return read(conn);
+        return read(conn, port, path);
     }
 
     static Response postMultipart(int port, String path, String field, String fileName, byte[] content) throws IOException {
@@ -53,7 +71,7 @@ final class HttpTestClient {
             out.write(content);
             out.write(("\r\n--" + boundary + "--\r\n").getBytes(StandardCharsets.UTF_8));
         }
-        return read(conn);
+        return read(conn, port, path);
     }
 
     private static HttpURLConnection open(int port, String path) throws IOException {
@@ -63,7 +81,7 @@ final class HttpTestClient {
         return conn;
     }
 
-    private static Response read(HttpURLConnection conn) throws IOException {
+    private static Response read(HttpURLConnection conn, int port, String path) throws IOException {
         int status = conn.getResponseCode();
         InputStream in = status >= 400 ? conn.getErrorStream() : conn.getInputStream();
         ByteArrayOutputStream buf = new ByteArrayOutputStream();
@@ -76,7 +94,7 @@ final class HttpTestClient {
                 }
             }
         }
-        return new Response(status, conn.getContentType(), buf.toByteArray());
+        return new Response(status, conn.getContentType(), buf.toByteArray(), port, path);
     }
 
 }

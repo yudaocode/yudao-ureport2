@@ -4,23 +4,23 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>cn.iocoder.ureport2</groupId>
-        <artifactId>yudao-ureport2-boot2-parent</artifactId>
+        <artifactId>ureport2-parent</artifactId>
         <version>${revision}</version>
         <relativePath>../ureport2-parent/pom.xml</relativePath>
     </parent>
-    <artifactId>yudao-ureport2-boot2-console</artifactId>
-    <name>yudao-ureport2 boot2 console</name>
+    <artifactId>ureport2-console</artifactId>
+    <name>ureport2-console</name>
     <description>UReport2 designer/preview console (from UReport2 2.2.9), javax.servlet line.</description>
 
     <dependencies>
         <dependency>
             <groupId>cn.iocoder.ureport2</groupId>
-            <artifactId>yudao-ureport2-boot2-core</artifactId>
+            <artifactId>ureport2-core</artifactId>
         </dependency>
         <!-- 与 UReport2 2.2.9 一致：console 依赖 font，默认注册原字体 -->
         <dependency>
             <groupId>cn.iocoder.ureport2</groupId>
-            <artifactId>yudao-ureport2-boot2-font</artifactId>
+            <artifactId>ureport2-font</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.velocity</groupId>

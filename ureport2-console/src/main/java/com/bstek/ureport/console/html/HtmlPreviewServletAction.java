@@ -334,6 +334,10 @@ public class HtmlPreviewServletAction extends RenderPageServletAction {
 			if(name==null || value==null || (name.startsWith("_") && !name.equals("_n"))){
 				continue;
 			}
+			// yudao-ureport2: token/tenantId 不由服务端回显进 HTML/JS，由 ureport-token.js 从 location.search 恢复传递
+			if(TOKEN_PARAMETER.equals(name) || TENANT_ID_PARAMETER.equals(name)){
+				continue;
+			}
 			if(sb.length()>0){
 				sb.append("&");
 			}
