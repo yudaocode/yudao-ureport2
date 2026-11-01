@@ -15,7 +15,6 @@
  ******************************************************************************/
 package com.bstek.ureport.console.importexcel;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -26,11 +25,7 @@ import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import javax.servlet.http.Part;
 
 import com.bstek.ureport.console.RenderPageServletAction;
 import com.bstek.ureport.console.cache.TempObjectCache;
@@ -41,6 +36,7 @@ import com.bstek.ureport.definition.ReportDefinition;
  * @since 2017年5月25日
  */
 public class ImportExcelServletAction extends RenderPageServletAction {
+	public static final String FILE_FIELD="_excel_file";
 	private List<ExcelParser> excelParsers=new ArrayList<ExcelParser>();
 	public ImportExcelServletAction(){
 		excelParsers.add(new HSSFExcelParser());
@@ -48,36 +44,37 @@ public class ImportExcelServletAction extends RenderPageServletAction {
 	}
 	@Override
 	public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String tempDir=System.getProperty("java.io.tmpdir");
-		FileItemFactory factory=new DiskFileItemFactory(1000240,new File(tempDir));
-		ServletFileUpload upload=new ServletFileUpload(factory);
+		// yudao-ureport2: 改用 Servlet 原生 multipart（Part），不再依赖 commons-fileupload 1.3.2；
+		// 大小上限由 Servlet 注册时的 MultipartConfigElement 控制（ureport.import-max-file-size / import-max-request-size）
 		ReportDefinition report=null;
 		String errorInfo=null;
 		try {
-			List<FileItem> items=upload.parseRequest(req);
-			for(FileItem item:items){
-				String fieldName=item.getFieldName();
-				String name=item.getName().toLowerCase();
-				if(fieldName.equals("_excel_file") && (name.endsWith(".xls") || name.endsWith(".xlsx"))){
-					InputStream inputStream=item.getInputStream();
-					for(ExcelParser parser:excelParsers){
-						if(parser.support(name)){
-							report=parser.parse(inputStream);
-							break;
+			Part part=req.getPart(FILE_FIELD);
+			String name=part==null?null:part.getSubmittedFileName();
+			if(name!=null){
+				name=name.toLowerCase();
+				if(name.endsWith(".xls") || name.endsWith(".xlsx")){
+					InputStream inputStream=part.getInputStream();
+					try{
+						for(ExcelParser parser:excelParsers){
+							if(parser.support(name)){
+								report=parser.parse(inputStream);
+								break;
+							}
 						}
+					}finally{
+						inputStream.close();
 					}
-					inputStream.close();
-					break;
 				}
 			}
 			errorInfo="请选择一个合法的Excel导入";
 		} catch (Exception e) {
-			e.printStackTrace();
-			errorInfo=e.getMessage();
+			errorInfo=e.getMessage()==null?e.getClass().getName():e.getMessage();
 		}
 		Map<String,Object> result=new HashMap<String,Object>();
 		if(report!=null){
 			result.put("result", true);
+			// 原行为：导入结果放入固定键（当前会话/全局临时缓存），隔离问题留待后续设计
 			TempObjectCache.putObject("classpath:template/template.ureport.xml", report);
 		}else{
 			result.put("result", false);

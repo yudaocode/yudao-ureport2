@@ -37,7 +37,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
-import org.apache.poi.xssf.usermodel.XSSFShape;
+import org.apache.poi.util.Units;
 
 import com.bstek.ureport.Utils;
 import com.bstek.ureport.build.paging.Page;
@@ -193,10 +193,10 @@ public class ExcelBuilderWithPaging extends ExcelBuilder{
 			        				anchor.setCol2(i+colSpan);
 			        				anchor.setRow1(rowNumber);
 			        				anchor.setRow2(rowNumber+rowSpan);
-			        				anchor.setDx1(leftMargin * XSSFShape.EMU_PER_PIXEL);
-			        				anchor.setDx2(width * XSSFShape.EMU_PER_PIXEL);
-			        				anchor.setDy1(topMargin * XSSFShape.EMU_PER_PIXEL);
-			        				anchor.setDy2(height * XSSFShape.EMU_PER_PIXEL);
+									anchor.setDx1(leftMargin * Units.EMU_PER_PIXEL);
+									anchor.setDx2(width * Units.EMU_PER_PIXEL);
+									anchor.setDy1(topMargin * Units.EMU_PER_PIXEL);
+									anchor.setDy2(height * Units.EMU_PER_PIXEL);
 			        				drawing.createPicture(anchor, pictureIndex);
 			        			}finally{
 			        				IOUtils.closeQuietly(inputStream);
@@ -237,10 +237,10 @@ public class ExcelBuilderWithPaging extends ExcelBuilder{
 			        					anchor.setCol2(i+colSpan);
 			        					anchor.setRow1(rowNumber);
 			        					anchor.setRow2(rowNumber+rowSpan);
-			        					anchor.setDx1(leftMargin * XSSFShape.EMU_PER_PIXEL);
-			        					anchor.setDx2(width * XSSFShape.EMU_PER_PIXEL);
-			        					anchor.setDy1(topMargin * XSSFShape.EMU_PER_PIXEL);
-			        					anchor.setDy2(height * XSSFShape.EMU_PER_PIXEL);
+										anchor.setDx1(leftMargin * Units.EMU_PER_PIXEL);
+										anchor.setDx2(width * Units.EMU_PER_PIXEL);
+										anchor.setDy1(topMargin * Units.EMU_PER_PIXEL);
+										anchor.setDy2(height * Units.EMU_PER_PIXEL);
 			        					drawing.createPicture(anchor, pictureIndex);
 			        				}finally{
 			        					IOUtils.closeQuietly(inputStream);

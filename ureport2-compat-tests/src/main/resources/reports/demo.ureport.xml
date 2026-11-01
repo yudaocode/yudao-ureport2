@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ureport>
+	<cell expand="None" name="A1" row="1" col="1" col-span="3">
+		<simple-value><![CDATA[CompatReportTitle]]></simple-value>
+		<cell-style font-size="12" font-family="宋体" align="center" valign="middle"></cell-style>
+	</cell>
+	<cell expand="Down" name="A2" row="2" col="1">
+		<dataset-value dataset-name="employee" aggregate="group" property="dept_code" order="asc"></dataset-value>
+		<cell-style font-size="10" font-family="宋体" align="center" valign="middle"></cell-style>
+	</cell>
+	<cell expand="Down" name="B2" row="2" col="2">
+		<dataset-value dataset-name="employee" aggregate="select" property="employee_name" order="asc"></dataset-value>
+		<cell-style font-size="10" font-family="宋体" align="center" valign="middle"></cell-style>
+	</cell>
+	<cell expand="Down" name="C2" row="2" col="3">
+		<dataset-value dataset-name="employee" aggregate="select" property="salary"></dataset-value>
+		<cell-style font-size="10" font-family="宋体" align="center" valign="middle"></cell-style>
+	</cell>
+	<cell expand="None" name="A3" row="3" col="1" col-span="2" left-cell="root" top-cell="root">
+		<simple-value><![CDATA[SalaryTotal]]></simple-value>
+		<cell-style font-size="10" font-family="宋体" align="center" valign="middle"></cell-style>
+	</cell>
+	<cell expand="None" name="C3" row="3" col="3" left-cell="root" top-cell="root">
+		<expression-value><![CDATA[sum(C2)]]></expression-value>
+		<cell-style font-size="10" font-family="宋体" align="center" valign="middle"></cell-style>
+	</cell>
+	<cell expand="Down" name="A4" row="4" col="1" left-cell="root" top-cell="root">
+		<dataset-value dataset-name="depts" aggregate="select" property="name"></dataset-value>
+		<cell-style font-size="10" font-family="宋体" align="center" valign="middle"></cell-style>
+	</cell>
+	<cell expand="None" name="B4" row="4" col="2" col-span="2">
+		<expression-value><![CDATA[yudaoHello()]]></expression-value>
+		<cell-style font-size="10" font-family="宋体" align="center" valign="middle"></cell-style>
+	</cell>
+	<row row-number="1" height="30"/>
+	<row row-number="2" height="20"/>
+	<row row-number="3" height="20"/>
+	<row row-number="4" height="20"/>
+	<column col-number="1" width="100"/>
+	<column col-number="2" width="120"/>
+	<column col-number="3" width="100"/>
+	<datasource name="demo-h2" type="buildin">
+		<dataset name="employee" type="sql">
+			<sql><![CDATA[select * from employee]]></sql>
+			<field name="dept_code"/>
+			<field name="employee_name"/>
+			<field name="salary"/>
+		</dataset>
+	</datasource>
+	<datasource name="bean" type="spring" bean="demoBeanDataset">
+		<dataset name="depts" type="bean" method="loadDepts" clazz="cn.iocoder.ureport2.compat.DemoBeanDataset">
+			<field name="code"/>
+			<field name="name"/>
+		</dataset>
+	</datasource>
+	<paper type="A4" orientation="portrait" paging-mode="fitpage"></paper>
+</ureport>

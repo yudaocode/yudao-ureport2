@@ -27,13 +27,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import javax.servlet.ServletContext;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.web.context.WebApplicationContext;
 
 import com.bstek.ureport.exception.ReportException;
 import com.bstek.ureport.provider.report.ReportFile;
@@ -76,7 +74,11 @@ public class FileReportProvider implements ReportProvider,ApplicationContextAwar
 	public List<ReportFile> getReportFiles() {
 		File file=new File(fileStoreDir);
 		List<ReportFile> list=new ArrayList<ReportFile>();
-		for(File f:file.listFiles()){
+		File[] files=file.listFiles();
+		if(files==null){
+			return list;
+		}
+		for(File f:files){
 			Calendar calendar=Calendar.getInstance();
 			calendar.setTimeInMillis(f.lastModified());
 			list.add(new ReportFile(f.getName(),calendar.getTime()));
@@ -134,19 +136,25 @@ public class FileReportProvider implements ReportProvider,ApplicationContextAwar
 	
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		File file=new File(fileStoreDir);
-		if(file.exists()){
+		// yudao-ureport2: 禁用时不解析、不创建任何目录
+		if(disabled){
 			return;
 		}
-		if(applicationContext instanceof WebApplicationContext){
-			WebApplicationContext context=(WebApplicationContext)applicationContext;
-			ServletContext servletContext=context.getServletContext();
-			String basePath=servletContext.getRealPath("/");
-			fileStoreDir=basePath+fileStoreDir;
-			file=new File(fileStoreDir);
-			if(!file.exists()){
-				file.mkdirs();
-			}
+		if(fileStoreDir==null || fileStoreDir.trim().length()==0){
+			throw new ReportException("ureport.fileStoreDir must be configured when the file report provider is enabled.");
+		}
+		// yudao-ureport2: 启用时只接受绝对目录；原 /WEB-INF/... 为 Web 根相对路径，不再解析，避免写入 Web 根或文件系统根下的 /WEB-INF
+		String dir=fileStoreDir.trim();
+		if(dir.replace('\\','/').startsWith("/WEB-INF")){
+			throw new ReportException("ureport.fileStoreDir ["+dir+"] is a web-root relative path, which is no longer supported. Please configure an absolute directory.");
+		}
+		File file=new File(dir);
+		if(!file.isAbsolute()){
+			throw new ReportException("ureport.fileStoreDir ["+dir+"] must be an absolute directory.");
+		}
+		fileStoreDir=file.getAbsolutePath();
+		if(!file.exists() && !file.mkdirs()){
+			throw new ReportException("Failed to create ureport.fileStoreDir ["+fileStoreDir+"].");
 		}
 	}
 

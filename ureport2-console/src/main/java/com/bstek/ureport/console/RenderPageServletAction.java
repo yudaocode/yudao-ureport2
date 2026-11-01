@@ -15,10 +15,8 @@
  ******************************************************************************/
 package com.bstek.ureport.console;
 
-import org.apache.velocity.app.Velocity;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
-import org.apache.velocity.runtime.log.NullLogChute;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -35,9 +33,9 @@ public abstract class RenderPageServletAction extends WriteJsonServletAction imp
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext=applicationContext;
 		ve = new VelocityEngine();
-		ve.setProperty(Velocity.RESOURCE_LOADER, "class");
-		ve.setProperty("class.resource.loader.class","org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
-		ve.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM,new NullLogChute());
+		// yudao-ureport2: Velocity 2.x 配置键（resource.loaders / resource.loader.<name>.class），日志走 SLF4J
+		ve.setProperty(RuntimeConstants.RESOURCE_LOADERS, "class");
+		ve.setProperty("resource.loader.class.class","org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
 		ve.init();	
 	}
 }

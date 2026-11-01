@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+cn.iocoder.ureport2.autoconfigure.UReportAutoConfiguration
+org.springframework.boot.env.EnvironmentPostProcessor=\
+cn.iocoder.ureport2.autoconfigure.UReportEnvironmentPostProcessor
