@@ -18,6 +18,8 @@ package com.bstek.ureport.console.html;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -115,6 +117,7 @@ public class HtmlPreviewServletAction extends RenderPageServletAction {
 				context.put("chartDatas", convertJson(htmlReport.getChartDatas()));
 				context.put("error", false);
 				context.put("file", req.getParameter("_u"));
+				context.put("navigationFile", buildNavigationFile(req));
 				context.put("intervalRefreshValue",htmlReport.getHtmlIntervalRefreshValue());
 				String customParameters=buildCustomParameters(req);
 				context.put("customParameters", customParameters);
@@ -169,6 +172,17 @@ public class HtmlPreviewServletAction extends RenderPageServletAction {
 			title=decode(title);
 		}
 		return title+"-ureport";
+	}
+	
+	/**
+	 * yudao-ureport2: 「预览」「分页预览」切换链接中的 _u 参数
+	 *
+	 * getParameter("_u") 已被 Servlet 解码一次，直接拼进链接会少一层编码：下一次请求再经 Servlet、{@link #decode(String)}
+	 * 共解码三次，模板名称中的 +、%20 等会被多解码一次（例如说变成空格），从而加载其它模板。
+	 * 所以这里重新编码一次，使下一次请求的 getParameter("_u") 与本次相同；同时编码后只包含 URL 安全字符，可以直接放入 href 属性
+	 */
+	private String buildNavigationFile(HttpServletRequest req){
+		return URLEncoder.encode(req.getParameter("_u"), StandardCharsets.UTF_8);
 	}
 	
 	private String convertJson(Collection<ChartData> data){
