@@ -130,11 +130,11 @@ class UReportCompatTest {
             String text = extractor.getText();
             assertTrue(text.contains("CompatReportTitle"), text);
             assertTrue(text.contains("JdbcEmpAlice"), text);
-            // WordProducer 用 XmlCursor 写入的页面设置（POI 4/5 精简 schema 无 CTPageSz）
+            // WordProducer 用 XmlCursor 写入的页面设置
             String sectPr = doc.getDocument().getBody().getSectPr().xmlText();
             assertTrue(sectPr.contains("pgSz") && sectPr.contains("pgMar"), sectPr);
             // 直接子元素检查：pgSz、pgMar 必须是 sectPr 的子元素，而不只是出现在 XML 文本中。
-            // boot2 的 poi-ooxml-schemas 4.1.2 精简包没有 CTPageSz / CTPageMar 类，不能调用 getPgSz()，改用 XmlCursor 遍历子元素
+            // 用 XmlCursor 遍历子元素，不依赖精简 schema（poi-ooxml-lite）中是否包含 CTPageSz / CTPageMar 类
             List<String> children = new ArrayList<>();
             XmlCursor cursor = doc.getDocument().getBody().getSectPr().newCursor();
             try {

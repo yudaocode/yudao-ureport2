@@ -5,7 +5,7 @@
     <!-- 仅用于聚合构建，不安装、不发布 -->
     <groupId>cn.iocoder.ureport2</groupId>
     <artifactId>ureport2-build</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>ureport2-build</name>
 

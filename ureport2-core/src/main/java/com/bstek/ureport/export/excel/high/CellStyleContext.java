@@ -26,6 +26,7 @@ import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.DefaultIndexedColorMap;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 
@@ -257,7 +258,7 @@ public class CellStyleContext {
 	private XSSFColor buildXSSFColor(String colorStr){
 		String[] color=colorStr.split(",");
 		Color c=new Color(Integer.valueOf(color[0]),Integer.valueOf(color[1]),Integer.valueOf(color[2]));
-		XSSFColor xssfColor=new XSSFColor(c);
+		XSSFColor xssfColor=new XSSFColor(c, new DefaultIndexedColorMap());
 		return xssfColor;
 	}
 	

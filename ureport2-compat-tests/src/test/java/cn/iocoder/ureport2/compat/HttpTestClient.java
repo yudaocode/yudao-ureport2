@@ -58,6 +58,17 @@ final class HttpTestClient {
         return read(conn, port, path);
     }
 
+    static Response postForm(int port, String path, String form) throws IOException {
+        HttpURLConnection conn = open(port, path);
+        conn.setRequestMethod("POST");
+        conn.setDoOutput(true);
+        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+        try (OutputStream out = conn.getOutputStream()) {
+            out.write(form.getBytes(StandardCharsets.UTF_8));
+        }
+        return read(conn, port, path);
+    }
+
     static Response postMultipart(int port, String path, String field, String fileName, byte[] content) throws IOException {
         String boundary = "----yudaoUReportBoundary" + System.nanoTime();
         HttpURLConnection conn = open(port, path);

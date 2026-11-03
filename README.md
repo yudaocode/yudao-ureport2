@@ -15,11 +15,13 @@ Java 包名仍是 `com.bstek.ureport.*`，以便兼容原模板和扩展实现�
 
 | 分支 | 适用宿主 | Maven Central 正式版本 | 源码开发版本 | Gitee | GitHub |
 | --- | --- | --- | --- | --- | --- |
-| `master` | JDK 8 + Spring Boot 2.7 | [`2.0.0`](https://central.sonatype.com/artifact/cn.iocoder.ureport2/ureport2-spring-boot-starter/2.0.0) | `2.0.0-SNAPSHOT` | [`master`](https://gitee.com/yudaocode/yudao-ureport2/tree/master/) | [`master`](https://github.com/yudaocode/yudao-ureport2/tree/master) |
-| `master-jdk17` | JDK 17 + Spring Boot 3.5 | [`3.0.0`](https://central.sonatype.com/artifact/cn.iocoder.ureport2/ureport2-spring-boot-starter/3.0.0) | `3.0.0-SNAPSHOT` | [`master-jdk17`](https://gitee.com/yudaocode/yudao-ureport2/tree/master-jdk17/) | [`master-jdk17`](https://github.com/yudaocode/yudao-ureport2/tree/master-jdk17) |
-| `master-jdk25` | JDK 25 + Spring Boot 4.1 | [`4.0.0`](https://central.sonatype.com/artifact/cn.iocoder.ureport2/ureport2-spring-boot-starter/4.0.0) | `4.0.0-SNAPSHOT` | [`master-jdk25`](https://gitee.com/yudaocode/yudao-ureport2/tree/master-jdk25/) | [`master-jdk25`](https://github.com/yudaocode/yudao-ureport2/tree/master-jdk25) |
+| `master` | JDK 8 + Spring Boot 2.7 | [`2.0.0`](https://central.sonatype.com/artifact/cn.iocoder.ureport2/ureport2-spring-boot-starter/2.0.0) | `2.0.1-SNAPSHOT` | [`master`](https://gitee.com/yudaocode/yudao-ureport2/tree/master/) | [`master`](https://github.com/yudaocode/yudao-ureport2/tree/master) |
+| `master-jdk17` | JDK 17 + Spring Boot 3.5 | [`3.0.0`](https://central.sonatype.com/artifact/cn.iocoder.ureport2/ureport2-spring-boot-starter/3.0.0) | `3.0.1-SNAPSHOT` | [`master-jdk17`](https://gitee.com/yudaocode/yudao-ureport2/tree/master-jdk17/) | [`master-jdk17`](https://github.com/yudaocode/yudao-ureport2/tree/master-jdk17) |
+| `master-jdk25` | JDK 25 + Spring Boot 4.1 | [`4.0.0`](https://central.sonatype.com/artifact/cn.iocoder.ureport2/ureport2-spring-boot-starter/4.0.0) | `4.0.1-SNAPSHOT` | [`master-jdk25`](https://gitee.com/yudaocode/yudao-ureport2/tree/master-jdk25/) | [`master-jdk25`](https://github.com/yudaocode/yudao-ureport2/tree/master-jdk25) |
 
 宿主直接引用 Maven Central 上的正式版本。源码开发版本是各分支 POM 中的默认版本，只在从源码构建时使用。各分支已验证的精确版本见下面的“版本线”。
+
+三个分支当前的源码开发版本 `2.0.1-SNAPSHOT`、`3.0.1-SNAPSHOT`、`4.0.1-SNAPSHOT` 尚未发布到 Maven Central，需要从源码构建并安装到本地 Maven 仓库后使用，见“从源码构建”。相对各自的正式版本，开发版本修复了预览页「预览」「分页预览」切换链接、「PDF 在线预览打印」调整纸张时的模板名称编码；`master` 分支的开发版本还改为按 POI 5.5.1 构建（正式版本 `2.0.0` 是按 POI 4.1.2 构建的历史版本），使用 POI 5.x 的宿主需要使用 `2.0.1-SNAPSHOT`。
 
 ## 关于 UReport2
 
@@ -39,9 +41,9 @@ UReport2 是一款架构在 Spring 之上的高性能纯 Java 报表引擎，通
 
 | 分支 | 正式版本 | 源码开发版本 | 已验证的宿主版本 | Spring | JDK | Servlet | 主要依赖 | Starter artifactId |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `master` | `2.0.0` | `2.0.0-SNAPSHOT` | Spring Boot 2.7.18 | 5.3.31 | JDK 8 | javax.servlet 4.0.1 | POI 4.1.2、Velocity 2.3 | `ureport2-spring-boot-starter` |
-| `master-jdk17` | `3.0.0` | `3.0.0-SNAPSHOT` | Spring Boot 3.5.15 | 6.2.19 | JDK 17 | jakarta.servlet 6.0.0 | POI 5.5.1、Velocity 2.4.1 | `ureport2-spring-boot-starter` |
-| `master-jdk25` | `4.0.0` | `4.0.0-SNAPSHOT` | Spring Boot 4.1.2 | 7.0.10 | JDK 25（库字节码为 Java 17） | jakarta.servlet 6.1.0 | POI 5.5.1、Velocity 2.4.1 | `ureport2-spring-boot-starter` |
+| `master` | `2.0.0` | `2.0.1-SNAPSHOT` | Spring Boot 2.7.18 | 5.3.31 | JDK 8 | javax.servlet 4.0.1 | POI 5.5.1（正式版本 `2.0.0` 为 POI 4.1.2）、Velocity 2.3 | `ureport2-spring-boot-starter` |
+| `master-jdk17` | `3.0.0` | `3.0.1-SNAPSHOT` | Spring Boot 3.5.15 | 6.2.19 | JDK 17 | jakarta.servlet 6.0.0 | POI 5.5.1、Velocity 2.4.1 | `ureport2-spring-boot-starter` |
+| `master-jdk25` | `4.0.0` | `4.0.1-SNAPSHOT` | Spring Boot 4.1.2 | 7.0.10 | JDK 25（库字节码为 Java 17） | jakarta.servlet 6.1.0 | POI 5.5.1、Velocity 2.4.1 | `ureport2-spring-boot-starter` |
 
 表中是实际验证过的精确版本，同一大版本的其他小版本没有逐一验证，不承诺全部可用。
 
@@ -63,12 +65,15 @@ UReport2 是一款架构在 Spring 之上的高性能纯 Java 报表引擎，通
 | 按各线的依赖版本适配 POI、Velocity、dom4j、commons-io、commons-lang3 以及 Spring、Servlet API 的调用（Boot 3 / 4 线同时迁移到 jakarta.servlet） | 在“版本线”表中列出的宿主版本上可以直接运行。这不代表覆盖所有版本，也不等于做过完整的依赖安全审计 |
 | 静态资源接口只读取打包的 `ureport-asserts` 目录，拒绝路径穿越和其他 classpath 资源 | 不能再通过 `/ureport/res/` 读到配置文件或类文件。这只是资源访问边界，登录和权限仍由宿主负责，见“安全与部署” |
 | 新增 `token` / `tenantId` 透明传递：入口 URL 带上这两个 query 参数后，设计器、预览页和查询表单设计器发往 UReport 自身同源路径的后续请求会自动带上；三个页面加 `no-referrer`；`token` 不进入报表参数，也不回显到预览 HTML | 宿主可以用自己的过滤器通过 `getParameter` 校验每个请求，不需要改 UReport 前端或增加登录接口，见“token / tenantId 传递” |
+| 预览页「预览」「分页预览」切换链接中的 `_u`，改用 Servlet 解码后重新编码一次的模板名称；「PDF 在线预览打印」调整纸张（`/pdf/newPaging`）时，与其它导出一样解码 `_u`（仅源码开发版本，正式版本不包含） | 模板名称包含 `+`、空格、`%`、中文等字符时，切换预览方式、调整 PDF 纸张后，仍加载同一个模板；修复前切换链接少一层编码，可能读到其它名称相近的模板，调整纸张时读取不到模板 |
 
 ## 快速开始
 
 ### 1. 引入 Starter
 
-当前分支对应的正式版本 `2.0.0` 已发布到 Maven Central（[ureport2-spring-boot-starter](https://central.sonatype.com/artifact/cn.iocoder.ureport2/ureport2-spring-boot-starter/2.0.0)、[ureport2-bom](https://central.sonatype.com/artifact/cn.iocoder.ureport2/ureport2-bom/2.0.0)），宿主直接引入即可，不需要先从源码构建。
+当前分支对应的正式版本 `2.0.0` 已发布到 Maven Central（[ureport2-spring-boot-starter](https://central.sonatype.com/artifact/cn.iocoder.ureport2/ureport2-spring-boot-starter/2.0.0)、[ureport2-bom](https://central.sonatype.com/artifact/cn.iocoder.ureport2/ureport2-bom/2.0.0)），按 POI 4.1.2 构建，使用 POI 4.x 的宿主直接引入即可，不需要先从源码构建。
+
+宿主使用 POI 5.x 时，不要引入 `2.0.0`，否则运行时可能出现 `NoSuchMethodError` 等不兼容问题。需要先按下面的“从源码构建”，把当前的开发版本 `2.0.1-SNAPSHOT` 安装到本地 Maven 仓库，再把 `ureport2.version` 改为 `2.0.1-SNAPSHOT`。正式版本 `2.0.0` 也不包含预览切换链接、PDF 纸张调整的模板名称编码修复。
 
 ```xml
 <properties>
@@ -146,18 +151,17 @@ Servlet 注册在 `/ureport/*`，宿主配置了 `server.servlet.context-path` �
 
 ### 从源码构建（可选）
 
-只有需要修改或调试源码时才需要这一步。源码分支 POM 中的默认版本是开发版本 `2.0.0-SNAPSHOT`，与 Maven Central 上的正式版本 `2.0.0` 不同。
+需要修改或调试源码、宿主使用 POI 5.x，或者需要正式版本之后的修复时，才需要这一步。源码分支 POM 中的默认版本是开发版本 `2.0.1-SNAPSHOT`（POI 5.5.1），与 Maven Central 上的正式版本 `2.0.0`（POI 4.1.2）不同，并且没有发布到 Maven Central。
 
 ```bash
 git clone https://gitee.com/yudaocode/yudao-ureport2.git
 cd yudao-ureport2
 git checkout master
 # 使用 JDK 8
-mvn clean install                       # 安装 2.0.0-SNAPSHOT 到本地 Maven 仓库
-# mvn clean install -Drevision=2.0.0    # 按正式版本号在本地构建，只安装到本地仓库，不发布
+mvn clean install                       # 安装 2.0.1-SNAPSHOT 到本地 Maven 仓库
 ```
 
-默认安装的是 `2.0.0-SNAPSHOT`，宿主要引用它时把上面的 `ureport2.version` 改为 `2.0.0-SNAPSHOT`。用 `-Drevision=2.0.0` 构建只用于本地验证，安装后会覆盖本地仓库中从 Central 下载的同版本文件。
+安装后，宿主把上面的 `ureport2.version` 改为 `2.0.1-SNAPSHOT`。不要通过 `-Drevision` 指定为已发布的 `2.0.0` 构建，否则会覆盖本地仓库中从 Central 下载的同版本文件。
 
 ## 安全与部署
 

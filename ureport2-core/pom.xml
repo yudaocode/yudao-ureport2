@@ -55,7 +55,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml-schemas</artifactId>
+            <artifactId>poi-ooxml-lite</artifactId>
         </dependency>
         <dependency>
             <groupId>com.google.zxing</groupId>

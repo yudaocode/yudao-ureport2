@@ -75,16 +75,17 @@ ${upSearchFormHtml}
 				#end
 				 <span class="caret"></span>
 			</button>
+			## yudao-ureport2: 链接中的 _u 使用 navigationFile（Servlet 解码后重新编码一次），不能直接使用已解码的 file，原因见 HtmlPreviewServletAction#buildNavigationFile
 			<ul class="dropdown-menu" role="menu">
 				#if($hasTools)
-				<li><a href="${contextPath}/ureport/preview?_u=${file}&_t=${_t}&${customParameters}" style="color:#337ab7">预览</a></li>
+				<li><a href="${contextPath}/ureport/preview?_u=${navigationFile}&_t=${_t}&${customParameters}" style="color:#337ab7">预览</a></li>
 				#else
-				<li><a href="${contextPath}/ureport/preview?_u=${file}&${customParameters}" style="color:#337ab7">预览</a></li>
+				<li><a href="${contextPath}/ureport/preview?_u=${navigationFile}&${customParameters}" style="color:#337ab7">预览</a></li>
 				#end
 				#if($hasTools)
-				<li><a href="${contextPath}/ureport/preview?_u=${file}&_i=1&_t=${_t}&${customParameters}" style="color:#337ab7">分页预览</a></li>
+				<li><a href="${contextPath}/ureport/preview?_u=${navigationFile}&_i=1&_t=${_t}&${customParameters}" style="color:#337ab7">分页预览</a></li>
 				#else
-				<li><a href="${contextPath}/ureport/preview?_u=${file}&_i=1&${customParameters}" style="color:#337ab7">分页预览</a></li>
+				<li><a href="${contextPath}/ureport/preview?_u=${navigationFile}&_i=1&${customParameters}" style="color:#337ab7">分页预览</a></li>
 				#end
 			</ul>
 		</div>
