@@ -97,6 +97,8 @@ public class ExportPdfServletAction extends BaseServletAction{
 	
 	public void newPaging(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		String file=req.getParameter("_u");
+		// yudao-ureport2: 与 buildPdf 等其它导出一致，解码 _u；否则模板名称包含中文、+、空格、% 等字符时，读取不到模板
+		file=decode(file);
 		if(StringUtils.isBlank(file)){
 			throw new ReportComputeException("Report file can not be null.");
 		}

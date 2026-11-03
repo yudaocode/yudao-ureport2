@@ -8,9 +8,9 @@
 
 | 分支 | 宿主 | 构建 JDK | 库版本主号 | 默认 `revision` |
 | --- | --- | --- | --- | --- |
-| `master` | Spring Boot 2.7.18 | 8 | `2.x` | `2.0.0-SNAPSHOT` |
-| `master-jdk17` | Spring Boot 3.5.15 | 17 | `3.x` | `3.0.0-SNAPSHOT` |
-| `master-jdk25` | Spring Boot 4.1.2 | 25（库字节码为 17） | `4.x` | `4.0.0-SNAPSHOT` |
+| `master` | Spring Boot 2.7.18 | 8 | `2.x` | `2.0.1-SNAPSHOT` |
+| `master-jdk17` | Spring Boot 3.5.15 | 17 | `3.x` | `3.0.1-SNAPSHOT` |
+| `master-jdk25` | Spring Boot 4.1.2 | 25（库字节码为 17） | `4.x` | `4.0.1-SNAPSHOT` |
 
 三条线的 groupId 都是 `cn.iocoder.ureport2`，artifactId 相同，与模块目录名一致。每条线发布 6 个产物：
 
