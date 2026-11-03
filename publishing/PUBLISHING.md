@@ -12,6 +12,8 @@
 | `master-jdk17` | Spring Boot 3.5.15 | 17 | `3.x` | `3.0.1-SNAPSHOT` |
 | `master-jdk25` | Spring Boot 4.1.2 | 25（库字节码为 17） | `4.x` | `4.0.1-SNAPSHOT` |
 
+默认 `revision` 是源码开发版本，只用于日常从源码构建，不发布给宿主使用。正式版本在发布时通过 `-Drevision` 传入，例如当前的正式版本 `2.0.1`、`3.0.1`、`4.0.1`，分别在 `master`、`master-jdk17`、`master-jdk25` 分支上以 `-Drevision=2.0.1`、`-Drevision=3.0.1`、`-Drevision=4.0.1` 构建并发布；源码中的默认 `revision` 保持不变。
+
 三条线的 groupId 都是 `cn.iocoder.ureport2`，artifactId 相同，与模块目录名一致。每条线发布 6 个产物：
 
 | artifactId | 打包 |
@@ -54,7 +56,7 @@ SNAPSHOT 与正式版本在 `skipUpload=true` 时的行为不同：
 | `-SNAPSHOT` | 走 snapshot 流程，跳过上传，不生成 release bundle |
 | 正式版本（例如 `3.0.0`） | 在 `target/central-publishing/central-bundle.zip` 生成 bundle，不上传 |
 
-所以要检查 bundle 内容，必须先改成正式版本号。
+所以要检查 bundle 内容，必须通过 `-Drevision` 使用正式版本号构建。
 
 ## 3 凭据与签名准备
 
@@ -70,6 +72,7 @@ SNAPSHOT 与正式版本在 `skipUpload=true` 时的行为不同：
 
 ```bash
 export JAVA_HOME=<本线对应的 JDK>
+export UREPORT_VERSION=<本线的正式版本号，例如 3.0.1>
 export UREPORT_SETTINGS=<私有 settings.xml 路径>
 export GPG_KEY_ID=<签名 key 的 ID 或指纹>
 export MAVEN_GPG_PASSPHRASE=<GPG 口令>
@@ -101,10 +104,10 @@ for f in */target/*.asc; do gpg --verify "$f" "${f%.asc}"; done
 
 ### 4.4 本地生成 release bundle（不上传）
 
-只在已经改成正式版本号、并决定准备发布时执行：
+只在决定准备发布时执行，通过 `-Drevision` 传入正式版本号：
 
 ```bash
-mvn -B -s "$UREPORT_SETTINGS" -P release -Dgpg.keyname="$GPG_KEY_ID" clean deploy
+mvn -B -s "$UREPORT_SETTINGS" -P release -Drevision="$UREPORT_VERSION" -Dgpg.keyname="$GPG_KEY_ID" clean deploy
 ```
 
 默认 `central.skipUpload=true`，这一步只在各模块的 `target/central-publishing/` 下生成 bundle，不上传。检查 bundle 中每个产物的 pom、jar、`-sources.jar`、`-javadoc.jar` 以及对应的 `.asc` 是否齐全（parent 和 bom 只有 pom）。
@@ -114,7 +117,7 @@ mvn -B -s "$UREPORT_SETTINGS" -P release -Dgpg.keyname="$GPG_KEY_ID" clean deplo
 只有在维护者明确批准发布后执行：
 
 ```bash
-mvn -B -s "$UREPORT_SETTINGS" -P release -Dgpg.keyname="$GPG_KEY_ID" \
+mvn -B -s "$UREPORT_SETTINGS" -P release -Drevision="$UREPORT_VERSION" -Dgpg.keyname="$GPG_KEY_ID" \
     -Dcentral.skipUpload=false -Dyudao.release.approved=true \
     clean deploy
 ```
@@ -144,7 +147,7 @@ mvn -B -s "$UREPORT_SETTINGS" -P release -Dgpg.keyname="$GPG_KEY_ID" \
 ```xml
 <properties>
     <!-- Spring Boot 2.7.x / JDK 8 用 2.x；3.5.x / JDK 17 用 3.x；4.1.x / JDK 17+ 用 4.x -->
-    <ureport2.version>3.0.0</ureport2.version>
+    <ureport2.version>3.0.1</ureport2.version>
 </properties>
 
 <dependency>
@@ -170,4 +173,4 @@ mvn -B -s "$UREPORT_SETTINGS" -P release -Dgpg.keyname="$GPG_KEY_ID" \
 </dependencyManagement>
 ```
 
-`ureport2-core`、`ureport2-font`、`ureport2-console` 必须与 starter 使用同一个版本，不要混用不同主号，也不要同时引入 `com.bstek.ureport:*`。发布到 Central 之前，这些坐标只能在执行过 `mvn install` 的机器上解析。
+`ureport2-core`、`ureport2-font`、`ureport2-console` 必须与 starter 使用同一个版本，不要混用不同主号，也不要同时引入 `com.bstek.ureport:*`。正式版本 `2.0.1`、`3.0.1`、`4.0.1` 已发布到 Maven Central，宿主直接引用即可；源码默认的 SNAPSHOT 版本只能在执行过 `mvn install` 的机器上解析，不要作为宿主依赖。
